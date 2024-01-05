@@ -3,6 +3,7 @@
 // ? Pages
 const SignUpForm = document.querySelector("#SignUpForm");
 const loginForm = document.querySelector("#loginForm");
+const homeContainer = document.querySelector("#homeContainer");
 
 // ? Buttons go through specific pages
 const signupLinkBtn = document.querySelector("#signupLink");
@@ -10,6 +11,7 @@ const loginLinkBtn = document.querySelector("#loginLink");
 
 // ? Buttons to perform specific actions on elements
 const signupBtn = document.querySelector("#signupBtn");
+const loginBtn = document.querySelector("#loginBtn");
 
 // ? Alerts
 const newUserNameAlert = document.querySelector("#newUserNameAlert");
@@ -19,6 +21,9 @@ const newUserRePasswordAlert = document.querySelector(
   "#newUserRePasswordAlert"
 );
 
+const userEmailAlert = document.querySelector("#userEmailAlert");
+const userPasswordAlert = document.querySelector("#userPasswordAlert");
+
 // ? User Inputs
 
 // * New User
@@ -27,11 +32,24 @@ const newUserEmailInput = document.querySelector("#newUserEmail");
 const newUserPasswordInput = document.querySelector("#newUserPassword");
 const newUserRePasswordInput = document.querySelector("#newUserRePassword");
 
+// * Old User
+const userEmailInput = document.querySelector("#userEmail");
+const userPasswordInput = document.querySelector("#userPassword");
+
+const user = document.querySelector("#user");
+
 // ? Validation Variables
 let validateUserName;
 let validateUserEmail;
 let validateUserPassword;
 let validateUserRePassword;
+
+// ? Checking for existing users
+let checkUserMail;
+let checkUserPass;
+
+// ? Retrieving the user name value
+let userInfo;
 
 // ? Users Array Storage
 let users = [];
@@ -53,9 +71,7 @@ loginLinkBtn.addEventListener("click", function () {
   loginForm.classList.remove("d-none");
 });
 
-
 // ? ================================== Sign Up Validation ==================================
-
 
 // Each input has its own validation using the same code
 function validateSignupInput(regex, inputElement) {
@@ -124,7 +140,6 @@ newUserRePasswordInput.addEventListener("change", function () {
     newUserRePasswordInput.classList.add("is-invalid");
   }
 });
-
 
 // ? ================================== Sign Up ==================================
 
@@ -198,5 +213,75 @@ signupBtn.addEventListener("click", function () {
     newUserEmailAlert.classList.replace("d-none", "d-block");
     newUserEmailInput.classList.remove("is-valid");
     newUserEmailInput.classList.add("is-invalid");
+  }
+});
+
+// ? ================================== Login Validation ==================================
+
+// Each input has its own validation using the same code
+function validateLoginInput(inputElement, checkValue, alert) {
+  if (checkValue == -1) {
+    alert.classList.add("d-block");
+    alert.classList.remove("d-none");
+    inputElement.classList.add("is-invalid");
+    inputElement.classList.remove("is-valid");
+  } else {
+    alert.classList.add("d-none");
+    alert.classList.remove("d-block");
+    inputElement.classList.add("is-valid");
+    inputElement.classList.remove("is-invalid");
+  }
+}
+
+// validate existing User mail
+userEmailInput.addEventListener("change", function () {
+  checkUserMail = users.findIndex(
+    (user) => user.userEmail === userEmailInput.value
+  );
+  validateLoginInput(userEmailInput, checkUserMail, userEmailAlert);
+});
+
+// validate existing User password
+userPasswordInput.addEventListener("change", function () {
+  checkUserPass = users.findIndex(
+    (user) =>
+      user.userEmail === userEmailInput.value &&
+      user.userPassword === userPasswordInput.value
+  );
+  validateLoginInput(userPasswordInput, checkUserPass, userPasswordAlert);
+});
+
+// ? ================================== Login ==================================
+
+// Clearing all the login input fields
+function clearLoginForm() {
+  userEmailInput.value = "";
+  userEmailInput.classList.remove("is-valid");
+  userEmailAlert.classList.remove("d-block");
+
+  userPasswordInput.value = "";
+  userPasswordInput.classList.remove("is-valid");
+  userPasswordAlert.classList.remove("d-block");
+}
+
+userInfo = users.find((user) => {
+  user.userEmail === userEmailInput.value &&
+    user.userPassword === userPasswordInput.value;
+  return user;
+});
+
+// Login as a exisiting user
+loginBtn.addEventListener("click", function () {
+  // If the inputs are empty, show an alert to the user
+  if (userEmailInput.value == "" || userPasswordInput.value == "") {
+    alert("All inputs must be filled");
+  }
+  // If the inputs are correctly filled , the user can login
+  else if (checkUserMail !== -1 && checkUserPass !== -1) {
+    homeContainer.classList.remove("d-none");
+    loginForm.classList.add("d-none");
+    console.log(userInfo.userName);
+    user.innerText = `${userInfo.userName}`;
+    clearLoginForm();
   }
 });
