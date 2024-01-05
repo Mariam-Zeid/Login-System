@@ -12,6 +12,7 @@ const loginLinkBtn = document.querySelector("#loginLink");
 // ? Buttons to perform specific actions on elements
 const signupBtn = document.querySelector("#signupBtn");
 const loginBtn = document.querySelector("#loginBtn");
+const logoutBtn = document.querySelector("#logoutBtn");
 
 // ? Alerts
 const newUserNameAlert = document.querySelector("#newUserNameAlert");
@@ -284,4 +285,11 @@ loginBtn.addEventListener("click", function () {
     user.innerText = `${userInfo.userName}`;
     clearLoginForm();
   }
+});
+
+// ? ================================== Logout ==================================
+
+logoutBtn.addEventListener("click", function () {
+  homeContainer.classList.add("d-none");
+  loginForm.classList.remove("d-none");
 });
